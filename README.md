@@ -1,8 +1,47 @@
 # Samsung SCX-4200 打印机 macOS 安装指南
 
-> **适用环境**：macOS Sequoia 15.x / Sonoma 14.x / Ventura 13.x（Intel & Apple Silicon）  
-> **验证日期**：2026-05-04  
-> **核心思路**：绕过系统版本检查，手动提取三星官方驱动包中的 `SCX-4300` 驱动（与 SCX-4200 硬件通用）。
+本项目通过两个 Git tag 区分 macOS 版本。仓库名称不变，请先选择与系统匹配的 tag，
+不要混用两个 tag 中的安装脚本和驱动文件。
+
+## 先选择版本
+
+| macOS | Apple Silicon | 使用版本 |
+|---|---|---|
+| 13–26 | Intel 或 Apple Silicon | `v1.0.0-macos-13-26-legacy` |
+| 27+ | Apple Silicon | `v2.0.0-macos-27-native-arm64` |
+
+- macOS 13–26 使用旧版 Samsung 驱动路径；Apple Silicon 需要 Rosetta 2。
+- macOS 27+ Apple Silicon 使用 native arm64 QPDL 驱动，不需要 Rosetta 2。
+- 本次 native 路径只覆盖打印，不覆盖扫描。
+
+## macOS 27+ Apple Silicon：native 安装
+
+```bash
+git clone git@github.com:kami1983/scx-4200-macos-setup-for-sequoia-15.git
+cd scx-4200-macos-setup-for-sequoia-15
+git checkout v2.0.0-macos-27-native-arm64
+sudo ./install_scx4200_native_driver.sh
+```
+
+安装脚本会检查 macOS 27+ 和 arm64，安装 SCX-4200 专用 PPD 以及原生
+`rastertoqpdl`，并优先复用现有 `Samsung_SCX-4200` 队列的 USB 地址。
+
+验证安装：
+
+```bash
+lpstat -p Samsung_SCX-4200
+file /Library/Printers/QPDL/rastertoqpdl
+lipo -archs /Library/Printers/QPDL/rastertoqpdl
+cupstestppd -q /Library/Printers/QPDL/scx4200.ppd
+echo "native SCX-4200 test" | lp -d Samsung_SCX-4200
+```
+
+native 过滤器的来源和 SHA-256 校验值见 [native/NOTICE.md](native/NOTICE.md)。
+
+以下内容是 `v1.0.0-macos-13-26-legacy` 的旧版安装步骤，适用于 macOS 13–26。
+
+> **验证日期**：2026-09-29
+> **旧版核心思路**：绕过系统版本检查，手动提取三星官方驱动包中的 `SCX-4300` 驱动（与 SCX-4200 硬件通用）。
 
 ---
 
