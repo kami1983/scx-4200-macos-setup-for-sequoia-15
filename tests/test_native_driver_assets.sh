@@ -30,6 +30,7 @@ assert_contains "$PPD" '*cupsFilter: "application/vnd.cups-raster 0 /Library/Pri
 assert_contains "$INSTALLER" 'macOS 27'
 assert_contains "$INSTALLER" 'arm64'
 assert_contains "$INSTALLER" 'Samsung_SCX-4200'
+assert_contains "$INSTALLER" 's/.*：//p'
 assert_not_contains "$INSTALLER" 'rastertosec'
 assert_not_contains "$INSTALLER" 'SCX-4300 Series'
 

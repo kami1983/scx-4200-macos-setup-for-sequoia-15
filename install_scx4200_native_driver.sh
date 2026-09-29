@@ -55,7 +55,9 @@ mkdir -p "$FILTER_DIR"
 install -o root -g wheel -m 755 "$FILTER_SOURCE" "$FILTER_DEST"
 install -o root -g wheel -m 644 "$PPD_SOURCE" "$PPD_DEST"
 
-URI=$(lpstat -v "$QUEUE" 2>/dev/null | sed -n 's/^[^:]*: //p' | head -n 1)
+URI=$(lpstat -v "$QUEUE" 2>/dev/null \
+    | sed -n -e 's/.*：//p' -e 's/^[^:]*: //p' \
+    | head -n 1)
 if [ -z "$URI" ]; then
     URI=$(lpinfo -v 2>/dev/null | awk 'tolower($0) ~ /usb:/ && tolower($0) ~ /scx-4200/ {print $2; exit}')
 fi
