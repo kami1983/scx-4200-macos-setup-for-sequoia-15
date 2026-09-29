@@ -225,11 +225,13 @@ Interfaces:
 Run:
 
 ```bash
-git diff f2bab2b -- README.md install_scx4200_driver.sh SamsungPrinterDrivers.dmg
+test -z "$(git diff f2bab2b -- install_scx4200_driver.sh SamsungPrinterDrivers.dmg)"
+git diff f2bab2b -- README.md
 git tag --list 'v1.0.0-macos-13-26-legacy' 'v2.0.0-macos-27-native-arm64'
 ```
 
-Expected: no diff for the legacy files and no existing tags with these names.
+Expected: the legacy installer and DMG have no diff; README only contains the
+new tag-selection/native documentation; and neither requested tag already exists.
 
 - [ ] Step 2: Run the full repository-local checks
 
@@ -280,4 +282,3 @@ git status --short --branch
 ```
 
 Expected: the legacy tag resolves to f2bab2b, the native tag resolves to the current implementation commit, and the working tree is clean. Do not push unless separately authorized.
-
